@@ -41,7 +41,7 @@ public class Hello {
 		String BASE_URL = "http://localhost:8080/CurrencyConverterREST/converter";
 		
 		// Inicializa o objeto HttpGet com a URL para mandar a requisição para a API
-		HttpGet get = new HttpGet(BASE_URL + "/1524584521/2" );
+		HttpGet get = new HttpGet(BASE_URL + "/USD/BRL/1" );
 		try {
 			CloseableHttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
@@ -71,7 +71,7 @@ public class Hello {
 			System.out.println("Converting " + "teste " + " in " + ": "
 					+ exchangeRates.getString("moedaOrigem"));
 			
-			return exchangeRates.getString("moedaOrigem").toString();
+			return Double.toString(exchangeRates.getDouble("valor"));
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
