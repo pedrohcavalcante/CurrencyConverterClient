@@ -165,8 +165,6 @@ public class Hello {
 
 			// Converte a resposta JSON em um objeto equivalente em Java
 			JSONArray exchangeArray = new JSONArray(EntityUtils.toString(entity));
-			/* JSONObject exchangeRates = new JSONObject(EntityUtils.toString(entity)); */
-
 			// Lança mensagem no console de que o acesso à API foi iniciado
 			
 			System.out.println("Live Currency Exchange Rates");
