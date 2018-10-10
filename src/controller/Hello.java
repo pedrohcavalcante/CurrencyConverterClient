@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -24,10 +26,22 @@ public class Hello {
 	static CloseableHttpClient httpClient = HttpClients.createDefault();
 	private String currency1;
 	private String currency2;
+	private Double valueToConvert;
+	
+	private List<String> allCurrencies = new ArrayList<>();
+	String[] currencies = { "DKK", "NOK", "SEK", "CZK", "GBP", "TRY", "INR",
+			"IDR", "PKR", "THB", "USD", "AUD", "CAD", "SGD", "HKD", "TWD", 
+			"NZD", "EUR", "HUF", "CHF", "JPY", "ILS", "CLP", "PHP", "MXN", 
+			"ZAR", "BRL", "MYR", "RUB", "KRW", "CNY", "PLN" };
      
     @PostConstruct
     public void init(){
         System.out.println(" Bean executado! ");
+        for (String a : currencies) {
+        	allCurrencies.add(a);
+        }
+        
+        
     }
      
     public String getMessage(){
@@ -49,6 +63,22 @@ public class Hello {
 
 	public void setCurrency2(String currency2) {
 		this.currency2 = currency2;
+	}
+
+	public List<String> getAllCurrencies() {
+		return allCurrencies;
+	}
+
+	/*public void setAllCurrencies(List<String> allCurrencies) {
+		this.allCurrencies = allCurrencies;
+	}*/
+
+	public Double getValueToConvert() {
+		return valueToConvert;
+	}
+	
+	public void setValueToConvert(Double valueToConvert) {
+		this.valueToConvert = valueToConvert;
 	}
 
 	private String sendLiveRequest() {
@@ -86,7 +116,7 @@ public class Hello {
 			
 			
 			//Valor equivalente à 1 dólar na moeda de origem
-			System.out.println("Converting " + "teste " + " in " + ": "
+			System.out.println("Converting " + valueToConvert + currency1 + " in " + ": "
 					+ exchangeRates.getString("moedaOrigem"));
 			
 			return Double.toString(exchangeRates.getDouble("valor"));
