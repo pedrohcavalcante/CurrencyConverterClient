@@ -22,6 +22,8 @@ import org.json.JSONObject;
 public class Hello {
 	
 	static CloseableHttpClient httpClient = HttpClients.createDefault();
+	private String currency1;
+	private String currency2;
      
     @PostConstruct
     public void init(){
@@ -33,7 +35,23 @@ public class Hello {
         return sendLiveRequest();
     }
     
-    private String sendLiveRequest() {
+    public String getCurrency1() {
+		return currency1;
+	}
+
+	public void setCurrency1(String currency1) {
+		this.currency1 = currency1;
+	}
+
+	public String getCurrency2() {
+		return currency2;
+	}
+
+	public void setCurrency2(String currency2) {
+		this.currency2 = currency2;
+	}
+
+	private String sendLiveRequest() {
 
 		//Variáveis auxiliares
 		Double from2 = 1.0;

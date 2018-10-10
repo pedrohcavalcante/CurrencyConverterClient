@@ -2,15 +2,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf"
-	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-	>
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
 <h:head>
-    <title>Hello JSF!</title>
+	<title>Currency Converter</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  	<link rel="icon" href="img/favicon.ico"/>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </h:head>
 <h:body>
+	<div class="container">
+	  <h2>Currency Converter 💰💸</h2>
+	  <h:form id="convert">
+	  	<div class="form-group">
+	    	<h:outputLabel for="currency1">Currency 1: </h:outputLabel>  
+		  	<h:inputText class="form-control" id="currency1" value="#{hello.currency1}" required="true" placeholder="Enter Currency 1" requiredMessage="Currency 1 is required"/><br/>  
+	    </div>
+	    <div class="form-group">
+	    	<h:outputLabel for="currency2">Currency 2: </h:outputLabel>  
+		  	<h:inputText class="form-control" id="currency2" value="#{hello.currency2}" required="true" placeholder="Enter Currency 2" requiredMessage="Currency 2 is required"/><br/>  
+	    </div>
+	    <h:commandButton id="submit-button" class="btn btn-default" value="Submit" action="index.xhtml"/>
+	  </h:form>
+	</div>
    #{hello.message}
 </h:body>
 </html>
