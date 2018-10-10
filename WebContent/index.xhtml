@@ -20,6 +20,14 @@
 		<h2>Currency Converter 💰💸</h2>
 		<h:form id="convert">
 			<div class="form-group">
+				<h:outputLabel for="isOneToAll">Deseja converter de uma moeda para todas? </h:outputLabel>
+				<h:selectOneRadio required="true" id="isOneToAll"
+					value="#{hello.isOneToAll}">
+					<f:selectItem itemValue="Sim" itemLabel="Sim" />
+					<f:selectItem itemValue="Nao" checked="checked" itemLabel="Nao" />
+				</h:selectOneRadio>
+			</div>
+			<div class="form-group">
 				<h:outputLabel for="currency1">Currency 1: </h:outputLabel>
 				<!-- <h:inputText class="form-control" id="currency1" value="#{hello.currency1}" required="true" placeholder="Enter Currency 1" requiredMessage="Currency 1 is required"/><br/> -->
 				<h:selectOneMenu id="currency1" required="true"
@@ -38,12 +46,27 @@
 			</div>
 			<div class="form-group">
 				<h:outputLabel for="valueToConvert">Value: </h:outputLabel>
-				<h:inputText converterId="javax.faces.Double" id="valueToConvert" required="true" value="#{hello.valueToConvert}"></h:inputText>
+				<h:inputText converterId="javax.faces.Double" id="valueToConvert"
+					required="true" value="#{hello.valueToConvert}"></h:inputText>
 			</div>
-			<h:commandButton id="submit-button" class="btn btn-default"
-				value="Submit" action="index.xhtml" />
+			<h:commandButton action="#{hello.converter}" id="submit-button"
+				class="btn btn-default" value="Submit" />
 		</h:form>
 	</div>
-   #{hello.message}
+   #{hello.valor}
+   <h:dataTable value="#{hello.objetosJSON}" var="o">
+		<h:column>
+			<f:facet name="header">Moeda de Origem</f:facet>
+   			#{o.moedaOrigem}
+   		</h:column>
+		<h:column>
+			<f:facet name="header">Moeda de Destino</f:facet>
+   			#{o.moedaDestino}
+   		</h:column>
+		<h:column>
+			<f:facet name="header">Valor</f:facet>
+   			#{o.valor}
+   		</h:column>
+	</h:dataTable>
 </h:body>
 </html>

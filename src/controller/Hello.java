@@ -16,40 +16,44 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
- 
+
+import domain.ObjectJSON;
+
 @RequestScoped
-@ManagedBean(name="hello")
+@ManagedBean(name = "hello")
 public class Hello {
-	
+
 	static CloseableHttpClient httpClient = HttpClients.createDefault();
 	private String currency1;
 	private String currency2;
 	private Double valueToConvert;
-	
+	private String isOneToAll = "Nao";
+	private String valor = "";
+	private List<ObjectJSON> objetosJSON;
+
 	private List<String> allCurrencies = new ArrayList<>();
-	String[] currencies = { "DKK", "NOK", "SEK", "CZK", "GBP", "TRY", "INR",
-			"IDR", "PKR", "THB", "USD", "AUD", "CAD", "SGD", "HKD", "TWD", 
-			"NZD", "EUR", "HUF", "CHF", "JPY", "ILS", "CLP", "PHP", "MXN", 
-			"ZAR", "BRL", "MYR", "RUB", "KRW", "CNY", "PLN" };
-     
-    @PostConstruct
-    public void init(){
-        System.out.println(" Bean executado! ");
-        for (String a : currencies) {
-        	allCurrencies.add(a);
-        }
-        
-        
-    }
-     
-    public String getMessage(){
-    	//System.out.println();
-        return sendLiveRequest();
-    }
-    
-    public String getCurrency1() {
+	String[] currencies = { "DKK", "NOK", "SEK", "CZK", "GBP", "TRY", "INR", "IDR", "PKR", "THB", "USD", "AUD", "CAD",
+			"SGD", "HKD", "TWD", "NZD", "EUR", "HUF", "CHF", "JPY", "ILS", "CLP", "PHP", "MXN", "ZAR", "BRL", "MYR",
+			"RUB", "KRW", "CNY", "PLN" };
+
+	@PostConstruct
+	public void init() {
+		System.out.println(" Bean executado! ");
+		for (String a : currencies) {
+			allCurrencies.add(a);
+		}
+		objetosJSON = new ArrayList<>();
+	}
+
+	public String getMessage() {
+		// System.out.println();
+		return sendLiveRequest();
+	}
+
+	public String getCurrency1() {
 		return currency1;
 	}
 
@@ -69,27 +73,48 @@ public class Hello {
 		return allCurrencies;
 	}
 
-	/*public void setAllCurrencies(List<String> allCurrencies) {
-		this.allCurrencies = allCurrencies;
-	}*/
+	/*
+	 * public void setAllCurrencies(List<String> allCurrencies) { this.allCurrencies
+	 * = allCurrencies; }
+	 */
 
 	public Double getValueToConvert() {
 		return valueToConvert;
 	}
-	
+
 	public void setValueToConvert(Double valueToConvert) {
 		this.valueToConvert = valueToConvert;
 	}
 
+	public String getIsOneToAll() {
+		return isOneToAll;
+	}
+
+	public void setIsOneToAll(String isOneToAll) {
+		this.isOneToAll = isOneToAll;
+	}
+
+	public String converter() {
+		if (isOneToAll.equals("Sim")) {
+			System.out.println("chamou sim");
+			valor = "";
+			sendLiveRequestForAll();
+		} else {
+			System.out.println("chamou nao");
+			valor = sendLiveRequest();
+		}
+		return "index.xhtml";
+	}
+
 	private String sendLiveRequest() {
 
-		//Variáveis auxiliares
+		// Variáveis auxiliares
 		Double from2 = 1.0;
 		Double to2 = 1.0;
 		String BASE_URL = "http://localhost:8080/CurrencyConverterREST/converter";
-		
+
 		// Inicializa o objeto HttpGet com a URL para mandar a requisição para a API
-		HttpGet get = new HttpGet(BASE_URL + "/USD/BRL/1" );
+		HttpGet get = new HttpGet(BASE_URL + "/" + currency1 + "/" + currency2 + "/" + valueToConvert);
 		try {
 			CloseableHttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
@@ -97,28 +122,27 @@ public class Hello {
 			// Converte a resposta JSON em um objeto equivalente em Java
 			JSONObject exchangeRates = new JSONObject(EntityUtils.toString(entity));
 
-			//Lança mensagem no console de que o acesso à API foi iniciado
+			// Lança mensagem no console de que o acesso à API foi iniciado
 			System.out.println("Live Currency Exchange Rates");
-			
-			//Variável utilizada para capturar se a requisição à API teve status ou não
-			//boolean status = exchangeRates.getBoolean("success");
 
-			/*if (!status) {
-				String codigoErro = exchangeRates.getJSONObject("error").getString("code");
+			// Variável utilizada para capturar se a requisição à API teve status ou não
+			// boolean status = exchangeRates.getBoolean("success");
 
-				String infoErro = exchangeRates.getJSONObject("error").getString("info");
+			/*
+			 * if (!status) { String codigoErro =
+			 * exchangeRates.getJSONObject("error").getString("code");
+			 * 
+			 * String infoErro = exchangeRates.getJSONObject("error").getString("info");
+			 * 
+			 * System.out.println("API reached its peak of access.");
+			 * System.out.println("Error: " + codigoErro); System.out.println("Message: " +
+			 * infoErro); System.exit(0); }
+			 */
 
-				System.out.println("API reached its peak of access.");
-				System.out.println("Error: " + codigoErro);
-				System.out.println("Message: " + infoErro);
-				System.exit(0);
-			}*/
-			
-			
-			//Valor equivalente à 1 dólar na moeda de origem
-			System.out.println("Converting " + valueToConvert + currency1 + " in " + ": "
+			// Valor equivalente à 1 dólar na moeda de origem
+			System.out.println("Converting " + valueToConvert + currency1 + " in ALL" + ": "
 					+ exchangeRates.getString("moedaOrigem"));
-			
+
 			return Double.toString(exchangeRates.getDouble("valor"));
 
 		} catch (ClientProtocolException e) {
@@ -130,6 +154,82 @@ public class Hello {
 		}
 		return null;
 
-}
- 
+	}
+
+	private String sendLiveRequestForAll() {
+
+		// Variáveis auxiliares
+		Double from2 = 1.0;
+		Double to2 = 1.0;
+		String BASE_URL = "http://localhost:8080/CurrencyConverterREST/converter";
+
+		// Inicializa o objeto HttpGet com a URL para mandar a requisição para a API
+		HttpGet get = new HttpGet(BASE_URL + "/" + currency1 + "/" + valueToConvert);
+		try {
+			CloseableHttpResponse response = httpClient.execute(get);
+			HttpEntity entity = response.getEntity();
+
+			// Converte a resposta JSON em um objeto equivalente em Java
+			JSONArray exchangeArray = new JSONArray(EntityUtils.toString(entity));
+			/* JSONObject exchangeRates = new JSONObject(EntityUtils.toString(entity)); */
+
+			// Lança mensagem no console de que o acesso à API foi iniciado
+			System.out.println("Live Currency Exchange Rates");
+
+			// Variável utilizada para capturar se a requisição à API teve status ou não
+			// boolean status = exchangeRates.getBoolean("success");
+
+			/*
+			 * if (!status) { String codigoErro =
+			 * exchangeRates.getJSONObject("error").getString("code");
+			 * 
+			 * String infoErro = exchangeRates.getJSONObject("error").getString("info");
+			 * 
+			 * System.out.println("API reached its peak of access.");
+			 * System.out.println("Error: " + codigoErro); System.out.println("Message: " +
+			 * infoErro); System.exit(0); }
+			 */
+
+			// Valor equivalente à 1 dólar na moeda de origem
+			for (int i = 0; i < exchangeArray.length(); i++) {
+				JSONObject tempObj = new JSONObject();
+				tempObj = (JSONObject) exchangeArray.get(i);
+				ObjectJSON obj = new ObjectJSON();
+				obj.setMoedaDestino(tempObj.getString("moedaOrigem"));
+				obj.setMoedaOrigem(tempObj.getString("moedaDestino"));
+				obj.setValor(tempObj.getDouble("valor"));
+				objetosJSON.add(obj);
+			}
+
+			// TODO fazer isso imprimir uma table
+
+			return "";
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
+	public List<ObjectJSON> getObjetosJSON() {
+		return objetosJSON;
+	}
+
+	public void setObjetosJSON(List<ObjectJSON> objetosJSON) {
+		this.objetosJSON = objetosJSON;
+	}
+
 }
