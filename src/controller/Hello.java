@@ -126,18 +126,12 @@ public class Hello {
 			System.out.println("Live Currency Exchange Rates");
 
 			// Variável utilizada para capturar se a requisição à API teve status ou não
-			// boolean status = exchangeRates.getBoolean("success");
+			boolean status = exchangeRates.getBoolean("status");
 
-			/*
-			 * if (!status) { String codigoErro =
-			 * exchangeRates.getJSONObject("error").getString("code");
-			 * 
-			 * String infoErro = exchangeRates.getJSONObject("error").getString("info");
-			 * 
-			 * System.out.println("API reached its peak of access.");
-			 * System.out.println("Error: " + codigoErro); System.out.println("Message: " +
-			 * infoErro); System.exit(0); }
-			 */
+			if (!status) {
+				String codigoErro = exchangeRates.getString("error");
+				return "Erro 500";
+			}
 
 			// Valor equivalente à 1 dólar na moeda de origem
 			System.out.println("Converting " + valueToConvert + currency1 + " in ALL" + ": "
@@ -174,21 +168,15 @@ public class Hello {
 			/* JSONObject exchangeRates = new JSONObject(EntityUtils.toString(entity)); */
 
 			// Lança mensagem no console de que o acesso à API foi iniciado
+			
 			System.out.println("Live Currency Exchange Rates");
-
-			// Variável utilizada para capturar se a requisição à API teve status ou não
-			// boolean status = exchangeRates.getBoolean("success");
-
-			/*
-			 * if (!status) { String codigoErro =
-			 * exchangeRates.getJSONObject("error").getString("code");
-			 * 
-			 * String infoErro = exchangeRates.getJSONObject("error").getString("info");
-			 * 
-			 * System.out.println("API reached its peak of access.");
-			 * System.out.println("Error: " + codigoErro); System.out.println("Message: " +
-			 * infoErro); System.exit(0); }
-			 */
+			boolean status = exchangeArray.getJSONObject(0).getBoolean("status");
+			
+			if (!status) {
+				String codigoErro = exchangeArray.getJSONObject(0).getString("error");
+				return "Erro 500";
+			}
+			exchangeArray.remove(0);
 
 			// Valor equivalente à 1 dólar na moeda de origem
 			for (int i = 0; i < exchangeArray.length(); i++) {
@@ -200,8 +188,6 @@ public class Hello {
 				obj.setValor(tempObj.getDouble("valor"));
 				objetosJSON.add(obj);
 			}
-
-			// TODO fazer isso imprimir uma table
 
 			return "";
 
