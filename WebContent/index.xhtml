@@ -15,22 +15,22 @@
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </h:head>
-<h:body>
+<h:body onload="formCheck()">
 	<div class="container">
 		<h2>Currency Converter 💰💸</h2>
 		<h:form id="convert">
 			<div class="form-group">
-				<h:outputLabel for="isOneToAll">Deseja converter de uma moeda para todas? </h:outputLabel>
+				<h:outputLabel for="isOneToAll">Do you want to convert from one currency to all? </h:outputLabel>
 				<h:selectOneRadio required="true" id="isOneToAll"
-					value="#{hello.isOneToAll}" onchange="formCheck()">
-					<f:selectItem itemValue="Sim" itemLabel="Sim" />
-					<f:selectItem itemValue="Nao" checked="checked" itemLabel="Nao" />
+					value="#{hello.isOneToAll}" onchange="formCheck()" onload="formCheck()">
+					<f:selectItem itemValue="Yes" itemLabel="Yes" />
+					<f:selectItem itemValue="No" checked="checked" itemLabel="No" />
 					<script type="text/javascript">
 						function formCheck(){
 							if (document.getElementById("convert:isOneToAll:0").checked){
-								document.getElementById("teste").style.display = "none";
+								document.getElementById("currency2form").style.display = "none";
 							}else{
-								document.getElementById("teste").style.display = "block";
+								document.getElementById("currency2form").style.display = "block";
 							}
 						}
 					</script>
@@ -44,7 +44,7 @@
 					<f:selectItems value="#{hello.allCurrencies}"></f:selectItems>
 				</h:selectOneMenu>
 			</div>
-			<div class="form-group" id="teste">
+			<div class="form-group" id="currency2form">
 				<h:outputLabel for="currency2">Currency 2: </h:outputLabel>
 				<!-- <h:inputText class="form-control" id="currency2" value="#{hello.currency2}" required="true" placeholder="Enter Currency 2" requiredMessage="Currency 2 is required"/><br/> -->
 				<h:selectOneMenu id="currency2" required="true"
@@ -59,23 +59,23 @@
 					required="true" value="#{hello.valueToConvert}"></h:inputText>
 			</div>
 			<h:commandButton action="#{hello.converter}" id="submit-button"
-				class="btn btn-default" value="Submit" />
-		</h:form>
+				class="btn btn-default" value="Convert"/>
+		</h:form><br/>
+
+	   <h:dataTable id="resultsTable" border="1" value="#{hello.objetosJSON}" var="o">
+			<h:column>
+				<f:facet name="header">Currency 1</f:facet>
+	   			#{o.moedaOrigem}
+	   		</h:column>
+			<h:column>
+				<f:facet name="header">Currency 2</f:facet>
+	   			#{o.moedaDestino}
+	   		</h:column>
+			<h:column>
+				<f:facet name="header">Value</f:facet>
+	   			#{o.valor}
+	   		</h:column>
+		</h:dataTable><br/>
 	</div>
-   #{hello.valor}
-   <h:dataTable value="#{hello.objetosJSON}" var="o">
-		<h:column>
-			<f:facet name="header">Moeda de Origem</f:facet>
-   			#{o.moedaOrigem}
-   		</h:column>
-		<h:column>
-			<f:facet name="header">Moeda de Destino</f:facet>
-   			#{o.moedaDestino}
-   		</h:column>
-		<h:column>
-			<f:facet name="header">Valor</f:facet>
-   			#{o.valor}
-   		</h:column>
-	</h:dataTable>
 </h:body>
 </html>

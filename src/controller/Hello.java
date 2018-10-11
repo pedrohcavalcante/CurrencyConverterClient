@@ -30,7 +30,7 @@ public class Hello {
 	private String currency1;
 	private String currency2;
 	private Double valueToConvert;
-	private String isOneToAll = "Nao";
+	private String isOneToAll = "No";
 	private String valor = "";
 	private List<ObjectJSON> objetosJSON;
 
@@ -95,7 +95,7 @@ public class Hello {
 	}
 
 	public String converter() {
-		if (isOneToAll.equals("Sim")) {
+		if (isOneToAll.equals("Yes")) {
 			System.out.println("chamou sim");
 			valor = "";
 			sendLiveRequestForAll();
@@ -136,6 +136,12 @@ public class Hello {
 			// Valor equivalente à 1 dólar na moeda de origem
 			System.out.println("Converting " + valueToConvert + currency1 + " in ALL" + ": "
 					+ exchangeRates.getString("moedaOrigem"));
+			
+			ObjectJSON obj = new ObjectJSON();
+			obj.setMoedaDestino(exchangeRates.getString("moedaDestino"));
+			obj.setMoedaOrigem(exchangeRates.getString("moedaOrigem"));
+			obj.setValor(exchangeRates.getDouble("valor"));
+			objetosJSON.add(obj);
 
 			return Double.toString(exchangeRates.getDouble("valor"));
 
@@ -181,8 +187,8 @@ public class Hello {
 				JSONObject tempObj = new JSONObject();
 				tempObj = (JSONObject) exchangeArray.get(i);
 				ObjectJSON obj = new ObjectJSON();
-				obj.setMoedaDestino(tempObj.getString("moedaOrigem"));
-				obj.setMoedaOrigem(tempObj.getString("moedaDestino"));
+				obj.setMoedaDestino(tempObj.getString("moedaDestino"));
+				obj.setMoedaOrigem(tempObj.getString("moedaOrigem"));
 				obj.setValor(tempObj.getDouble("valor"));
 				objetosJSON.add(obj);
 			}
