@@ -154,6 +154,7 @@ public class Hello {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			FacesContext.getCurrentInstance().addMessage("convert:submit-button", new FacesMessage("API not responding"));
 			e.printStackTrace();
 		}
 
@@ -203,6 +204,7 @@ public class Hello {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			FacesContext.getCurrentInstance().addMessage("convert:submit-button", new FacesMessage("API not responding"));
 			e.printStackTrace();
 		}
 

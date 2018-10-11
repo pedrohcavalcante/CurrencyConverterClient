@@ -19,7 +19,9 @@
 	<div class="container">
 		<h2>Currency Converter 💰💸</h2>
 		<h:form id="convert">
-			<h:message class="alert alert-danger" for="submit-button"/>
+			<div class="form-group">
+				<h:message class="alert alert-danger" for="submit-button"/>
+			</div>
  			<div class="form-group">
 				<h:outputLabel for="isOneToAll">Do you want to convert from one currency to all? </h:outputLabel>
 				<h:selectOneRadio required="true" id="isOneToAll"
