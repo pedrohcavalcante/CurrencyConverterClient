@@ -1,13 +1,14 @@
 package controller;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import domain.ObjectJSON;
 
+@SuppressWarnings("deprecation")
 @RequestScoped
 @ManagedBean(name = "hello")
 public class Hello {
@@ -31,7 +33,7 @@ public class Hello {
 	private String currency2;
 	private Double valueToConvert;
 	private String isOneToAll = "No";
-	private String valor = "";
+	private String valor;
 	private List<ObjectJSON> objetosJSON;
 
 	private List<String> allCurrencies = new ArrayList<>();
@@ -46,11 +48,6 @@ public class Hello {
 			allCurrencies.add(a);
 		}
 		objetosJSON = new ArrayList<>();
-	}
-
-	public String getMessage() {
-		// System.out.println();
-		return sendLiveRequest();
 	}
 
 	public String getCurrency1() {
@@ -72,18 +69,29 @@ public class Hello {
 	public List<String> getAllCurrencies() {
 		return allCurrencies;
 	}
-
-	/*
-	 * public void setAllCurrencies(List<String> allCurrencies) { this.allCurrencies
-	 * = allCurrencies; }
-	 */
-
+	
 	public Double getValueToConvert() {
 		return valueToConvert;
 	}
 
 	public void setValueToConvert(Double valueToConvert) {
 		this.valueToConvert = valueToConvert;
+	}
+	
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
+	public List<ObjectJSON> getObjetosJSON() {
+		return objetosJSON;
+	}
+
+	public void setObjetosJSON(List<ObjectJSON> objetosJSON) {
+		this.objetosJSON = objetosJSON;
 	}
 
 	public String getIsOneToAll() {
@@ -97,20 +105,17 @@ public class Hello {
 	public String converter() {
 		if (isOneToAll.equals("Yes")) {
 			System.out.println("chamou sim");
-			valor = "";
 			sendLiveRequestForAll();
 		} else {
 			System.out.println("chamou nao");
-			valor = sendLiveRequest();
+			sendLiveRequest();
 		}
 		return "index.xhtml";
 	}
 
-	private String sendLiveRequest() {
+	private void sendLiveRequest() {
 
 		// Variáveis auxiliares
-		Double from2 = 1.0;
-		Double to2 = 1.0;
 		String BASE_URL = "http://localhost:8080/CurrencyConverterREST/converter";
 
 		// Inicializa o objeto HttpGet com a URL para mandar a requisição para a API
@@ -128,9 +133,10 @@ public class Hello {
 			// Variável utilizada para capturar se a requisição à API teve status ou não
 			boolean status = exchangeRates.getBoolean("status");
 
+			//Erro da API
 			if (!status) {
-				String codigoErro = exchangeRates.getString("error");
-				return "Erro 500";
+				FacesContext.getCurrentInstance().addMessage("convert:submit-button", new FacesMessage(exchangeRates.getString("error")));
+				return;
 			}
 
 			// Valor equivalente à 1 dólar na moeda de origem
@@ -143,8 +149,6 @@ public class Hello {
 			obj.setValor(exchangeRates.getDouble("valor"));
 			objetosJSON.add(obj);
 
-			return Double.toString(exchangeRates.getDouble("valor"));
-
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -152,15 +156,12 @@ public class Hello {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return null;
 
 	}
 
-	private String sendLiveRequestForAll() {
+	private void sendLiveRequestForAll() {
 
 		// Variáveis auxiliares
-		Double from2 = 1.0;
-		Double to2 = 1.0;
 		String BASE_URL = "http://localhost:8080/CurrencyConverterREST/converter";
 
 		// Inicializa o objeto HttpGet com a URL para mandar a requisição para a API
@@ -176,9 +177,12 @@ public class Hello {
 			System.out.println("Live Currency Exchange Rates");
 			boolean status = exchangeArray.getJSONObject(0).getBoolean("status");
 			
+			//Erro da API
 			if (!status) {
-				String codigoErro = exchangeArray.getJSONObject(0).getString("error");
-				return "Erro 500";
+				System.out.println("Entrei aqui");
+				System.out.println(exchangeArray.getJSONArray(0).toString());
+				FacesContext.getCurrentInstance().addMessage("convert:submit-button", new FacesMessage(exchangeArray.getJSONObject(0).getString("error")));
+				return;
 			}
 			exchangeArray.remove(0);
 
@@ -193,7 +197,6 @@ public class Hello {
 				objetosJSON.add(obj);
 			}
 
-			return "";
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -202,24 +205,7 @@ public class Hello {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return null;
 
-	}
-
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
-	public List<ObjectJSON> getObjetosJSON() {
-		return objetosJSON;
-	}
-
-	public void setObjetosJSON(List<ObjectJSON> objetosJSON) {
-		this.objetosJSON = objetosJSON;
 	}
 
 }
